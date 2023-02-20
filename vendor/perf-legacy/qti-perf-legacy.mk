@@ -17,6 +17,8 @@ TARGET_PERF_COMPONENT_VARIANT := perf-legacy
 PRODUCT_SOONG_NAMESPACES += \
     device/qcom/common/vendor/perf-legacy
 
+QCOM_COMMON_PATH := device/qcom/common
+
 # Configs
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(QCOM_COMMON_PATH)/vendor/perf-legacy/configs/common,$(TARGET_COPY_OUT_VENDOR)/etc) \

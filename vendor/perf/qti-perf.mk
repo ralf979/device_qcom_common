@@ -19,6 +19,8 @@ PRODUCT_SOONG_NAMESPACES += \
 
 TARGET_PERF_COMPONENT_VARIANT := perf
 
+QCOM_COMMON_PATH := device/qcom/common
+
 # Configs
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(QCOM_COMMON_PATH)/vendor/perf/configs/common,$(TARGET_COPY_OUT_VENDOR)/etc) \
