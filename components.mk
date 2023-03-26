@@ -15,7 +15,7 @@
 # Current system tag :- LA.QSSI.13.0.r1-08200-qssi.0
 # Current vendor tag :- LA.UM.9.14.r1-20200-LAHAINA.QSSI13.0
 
-ifeq ($(TARGET_COMMON_QTI_COMPONENTS), all)
+ifneq (,$(filter all, $(TARGET_COMMON_QTI_COMPONENTS)))
 TARGET_COMMON_QTI_COMPONENTS := \
     adreno \
     audio \
@@ -32,7 +32,8 @@ TARGET_COMMON_QTI_COMPONENTS := \
     usb \
     vibrator \
     wfd \
-    wlan
+    wlan \
+    $(filter-out all,$(TARGET_COMMON_QTI_COMPONENTS))
 endif
 
 # QTI Common Components
@@ -61,9 +62,17 @@ ifneq (,$(filter bt, $(TARGET_COMMON_QTI_COMPONENTS)))
   include $(QCOM_COMMON_PATH)/vendor/bt/qti-bt.mk
 endif
 
+ifneq (,$(filter charging, $(TARGET_COMMON_QTI_COMPONENTS)))
+  include $(QCOM_COMMON_PATH)/vendor/charging/qti-charging.mk
+endif
+
 ifneq (,$(filter display, $(TARGET_COMMON_QTI_COMPONENTS)))
   include $(QCOM_COMMON_PATH)/system/display/qti-display.mk
   include $(QCOM_COMMON_PATH)/vendor/display/qti-display.mk
+endif
+
+ifneq (,$(filter dsprpcd, $(TARGET_COMMON_QTI_COMPONENTS)))
+  include $(QCOM_COMMON_PATH)/vendor/dsprpcd/qti-dsprpcd.mk
 endif
 
 ifeq ($(call is-board-platform-in-list,$(5_10_FAMILY)),true)
@@ -79,8 +88,12 @@ ifneq (,$(filter init, $(TARGET_COMMON_QTI_COMPONENTS)))
   include $(QCOM_COMMON_PATH)/vendor/init/qti-init.mk
 endif
 
+ifneq (,$(filter keymaster, $(TARGET_COMMON_QTI_COMPONENTS)))
+  include $(QCOM_COMMON_PATH)/vendor/keymaster/qti-keymaster.mk
+endif
+
 ifneq (,$(filter media, $(TARGET_COMMON_QTI_COMPONENTS)))
-  ifeq ($(call is-board-platform-in-list,$(5_10_FAMILY) bengal),true)
+  ifeq ($(call is-board-platform-in-list,$(5_10_FAMILY) $(5_15_FAMILY) bengal),true)
     include $(QCOM_COMMON_PATH)/vendor/media/qti-media.mk
   else ifeq ($(call is-board-platform-in-list,$(5_4_FAMILY)),true)
     include $(QCOM_COMMON_PATH)/vendor/media-5.4/qti-media-5.4.mk
@@ -99,10 +112,18 @@ endif
 
 ifneq (,$(filter perf, $(TARGET_COMMON_QTI_COMPONENTS)))
   include $(QCOM_COMMON_PATH)/system/perf/qti-perf.mk
-  ifeq ($(call is-board-platform-in-list,$(5_10_FAMILY)),true)
+  ifeq ($(call is-board-platform-in-list,$(5_10_FAMILY) $(5_15_FAMILY)),true)
     include $(QCOM_COMMON_PATH)/vendor/perf/qti-perf.mk
   else
     include $(QCOM_COMMON_PATH)/vendor/perf-legacy/qti-perf-legacy.mk
+  endif
+endif
+
+ifneq (,$(filter qseecomd, $(TARGET_COMMON_QTI_COMPONENTS)))
+  ifeq ($(call is-board-platform-in-list,$(5_4_FAMILY) $(5_10_FAMILY)),true)
+    include $(QCOM_COMMON_PATH)/vendor/qseecomd/qti-qseecomd.mk
+  else
+    include $(QCOM_COMMON_PATH)/vendor/qseecomd-legacy/qti-qseecomd-legacy.mk
   endif
 endif
 
@@ -129,7 +150,7 @@ ifneq (,$(filter wfd, $(TARGET_COMMON_QTI_COMPONENTS)))
 endif
 
 ifneq (,$(filter wlan, $(TARGET_COMMON_QTI_COMPONENTS)))
-  ifeq ($(call is-board-platform-in-list,$(5_10_FAMILY)),true)
+  ifeq ($(call is-board-platform-in-list,$(5_10_FAMILY) $(5_15_FAMILY)),true)
     include $(QCOM_COMMON_PATH)/vendor/wlan/qti-wlan.mk
   else
     include $(QCOM_COMMON_PATH)/vendor/wlan-legacy/qti-wlan-legacy.mk
