@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Current tag - LA.VENDOR.1.0.r1-16000-WAIPIO.QSSI13.0
-
 PRODUCT_SOONG_NAMESPACES += \
     device/qcom/common/vendor/perf
 
@@ -42,7 +40,6 @@ endif
 # Packages
 PRODUCT_PACKAGES += \
     android.hardware.thermal@2.0.vendor \
-    init.aospa.perf.rc \
     libavservices_minijail.vendor \
     libpsi.vendor \
     libtflite \
