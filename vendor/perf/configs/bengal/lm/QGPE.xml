@@ -7,7 +7,7 @@
       Each feature has an xml file to define the feature components
 
   ===========================================================================
-  Copyright (c) 2021 Qualcomm Technologies, Inc.
+  Copyright (c) 2022 Qualcomm Technologies, Inc.
   All Rights Reserved.
   Confidential and Proprietary - Qualcomm Technologies, Inc.
   ===========================================================================
@@ -22,30 +22,48 @@
     <Libname>libapengine.so</Libname>
     <Configs>
         <STUTTER_SCALE>10</STUTTER_SCALE>
-        <THERMAL_MONITOR>1</THERMAL_MONITOR>
-        <THERMAL_MONITOR_RULES>GAME_OPT_TSENS_RULE1,GAME_OPT_TSENS_RULE2,GAME_OPT_TSENS_RULE3</THERMAL_MONITOR_RULES>
-        <!-- FPS threshold values in the order: Increase, Aggressive Increase, Decrease -->
-        <FPS_30_THRESHOLD>0.6, 1.0, 0.4</FPS_30_THRESHOLD>
-        <FPS_35_THRESHOLD>0.6, 1.0, 0.4</FPS_35_THRESHOLD>
-        <FPS_40_THRESHOLD>0.6, 1.0, 0.4</FPS_40_THRESHOLD>
-        <FPS_60_THRESHOLD>0.6, 1.0, 0.4</FPS_60_THRESHOLD>
-        <FPS_90_THRESHOLD>2.0, 5.0, 1.0</FPS_90_THRESHOLD>
-        <FPS_120_THRESHOLD>2.0, 5.0, 1.0</FPS_120_THRESHOLD>
-        <FPS_144_THRESHOLD>2.0, 5.0, 1.0</FPS_144_THRESHOLD>
-        <GROUP_UPMIGRATE_PATH>/proc/sys/kernel/sched_group_upmigrate</GROUP_UPMIGRATE_PATH>
-        <GROUP_DOWNMIGRATE_PATH>/proc/sys/kernel/sched_group_downmigrate</GROUP_DOWNMIGRATE_PATH>
+        <GROUP_UPMIGRATE_PATH>/proc/sys/walt/sched_group_upmigrate</GROUP_UPMIGRATE_PATH>
+        <GROUP_DOWNMIGRATE_PATH>/proc/sys/walt/sched_group_downmigrate</GROUP_DOWNMIGRATE_PATH>
         <BIG_CLUSTER_ID>4,5,6,7</BIG_CLUSTER_ID>
     </Configs>
     <Profiles>
         <Profile>
+            <!-- CORE_CTL_ENABLE_BIG, 0-->
+            <!-- SCHED_MIN_TASK_UTIL_FOR_COLOCATION, 0, SCHED_MIN_TASK_UTIL_FOR_BOOST, 0-->
+            <!-- SCHED_MANY_WAKE_UP, 4-->
             <PROACTIVE_DEFAULT>
-                <!-- Colocation v3 1 GHz, Sched Many Wake Up Threshold 4 -->
-                0x4144C100,1000000,0x40C9C000,4
+                0x41008000, 0,
+                0x40C78000, 0, 0x40C7C000, 0,
+                0x40C9C000, 4
             </PROACTIVE_DEFAULT>
+            <!-- CORE_CTL_ENABLE_BIG, 0-->
+            <!-- SCHED_MIN_TASK_UTIL_FOR_COLOCATION, 0, SCHED_MIN_TASK_UTIL_FOR_BOOST, 0-->
+            <!-- SCHED_MANY_WAKE_UP, 4-->
             <PROACTIVE_SKEW2>
-                <!-- Colocation v3 1 GHz, Predictive Load 1, Sched Many Wake Up Threshold 4 -->
-                0x4144C100,1000000,0x41444000,1,0x41444200,1,0x40C9C000,4
+                0x41008000, 0,
+                0x40C78000, 0, 0x40C7C000, 0,
+                0x40C9C000, 4
             </PROACTIVE_SKEW2>
+            <!-- MIN_FREQ_CLUSTER_BIG_CORE_0 1766 -->
+            <PREDICTIVE_PROFILE1>
+                0x40800000,1766
+            </PREDICTIVE_PROFILE1>
+            <!-- MIN_FREQ_CLUSTER_LITTLE_CORE_0 1516 -->
+            <PREDICTIVE_PROFILE2>
+                0x40800100,1516
+            </PREDICTIVE_PROFILE2>
+            <!-- GPU MIN_FREQUENCY resource opcode,value-->
+            <PREDICTIVE_PROFILE3>
+                0x42804000,0
+            </PREDICTIVE_PROFILE3>
+            <!-- DDR_LAT_MIN_FREQ_GOLD resource opcode,value-->
+            <PREDICTIVE_PROFILE4>
+                0x43488000,2092000
+            </PREDICTIVE_PROFILE4>
+            <!-- SCHED_LOAD_BOOST GOLD resource opcode,value-->
+            <PREDICTIVE_PROFILE5>
+                0x40C68000, -3
+            </PREDICTIVE_PROFILE5>
         </Profile>
     </Profiles>
 
@@ -116,6 +134,13 @@
                 </Trigger>
             </Triggers>
             <Samples>100</Samples>
+            <Configs>
+                <SCHEDPARAMS_BIG_NR_RUN_PATH>/sys/kernel/msm_performance/notify/aggr_big_nr</SCHEDPARAMS_BIG_NR_RUN_PATH>
+                <SCHEDPARAMS_AGGR_TOP_LOAD_PATH>/sys/kernel/msm_performance/notify/aggr_top_load</SCHEDPARAMS_AGGR_TOP_LOAD_PATH>
+                <SCHEDPARAMS_REGISTER_SCHED_TRIGGERS>/sys/kernel/msm_performance/parameters/core_ctl_register</SCHEDPARAMS_REGISTER_SCHED_TRIGGERS>
+                <SCHEDPARAMS_CLUSTER_TOP_LOAD_PATH>/sys/kernel/msm_performance/notify/top_load_cluster</SCHEDPARAMS_CLUSTER_TOP_LOAD_PATH>
+                <SCHEDPARAMS_CLUSTER_CURR_CAP_PATH>/sys/kernel/msm_performance/notify/curr_cap_cluster</SCHEDPARAMS_CLUSTER_CURR_CAP_PATH>
+            </Configs>
         </Meter>
 
         <Meter>
@@ -144,10 +169,7 @@
                    <AsyncId>VENDOR_HINT_ACTIVITY_STOP</AsyncId>
                    <AsyncType>-1</AsyncType>
                 </Trigger>
-
-
             </Triggers>
-
             <Configs>
                 <GPU_AVAILABLE_FREQUENCIES>/sys/class/kgsl/kgsl-3d0/gpu_available_frequencies</GPU_AVAILABLE_FREQUENCIES>
                 <GPU_CLOCK_STATS>/sys/class/kgsl/kgsl-3d0/gpu_clock_stats</GPU_CLOCK_STATS>
@@ -157,6 +179,7 @@
             <Samples>100</Samples>
         </Meter>
     </Meters>
+
     <Triggers>
         <Trigger>
            <Primary>true</Primary>
@@ -217,4 +240,9 @@
            <AsyncType>1</AsyncType>
         </Trigger>
     </Triggers>
+    <IgnoredApps>
+        <App>com.google.android.gms</App>
+        <App>com.android.vending</App>
+        <App>com.google.android.projection.gearhead</App>
+    </IgnoredApps>
 </Feature>

@@ -213,29 +213,12 @@ echo $sched_rt_runtime_us > /proc/sys/kernel/sched_rt_runtime_us
 
 # Disable Core control on silver
 echo 0 > /sys/devices/system/cpu/cpu0/core_ctl/enable
-
 # Core control parameters for gold
-if [ -d "/sys/devices/system/cpu/cpu4/" ]; then
 echo 2 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
 echo 60 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
 echo 40 > /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres
 echo 100 > /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms
 echo 4 > /sys/devices/system/cpu/cpu4/core_ctl/task_thres
-
-elif [ -d "/sys/devices/system/cpu/cpu5/" ]; then
-echo 2 > /sys/devices/system/cpu/cpu5/core_ctl/min_cpus
-echo 60 > /sys/devices/system/cpu/cpu5/core_ctl/busy_up_thres
-echo 40 > /sys/devices/system/cpu/cpu5/core_ctl/busy_down_thres
-echo 100 > /sys/devices/system/cpu/cpu5/core_ctl/offline_delay_ms
-echo 4 > /sys/devices/system/cpu/cpu5/core_ctl/task_thres
-
-elif [ -d "/sys/devices/system/cpu/cpu6/" ]; then
-echo 2 > /sys/devices/system/cpu/cpu6/core_ctl/min_cpus
-echo 60 > /sys/devices/system/cpu/cpu6/core_ctl/busy_up_thres
-echo 40 > /sys/devices/system/cpu/cpu6/core_ctl/busy_down_thres
-echo 100 > /sys/devices/system/cpu/cpu6/core_ctl/offline_delay_ms
-echo 4 > /sys/devices/system/cpu/cpu6/core_ctl/task_thres
-fi
 
 # Controls how many more tasks should be eligible to run on gold CPUs
 # w.r.t number of gold CPUs available to trigger assist (max number of
@@ -305,7 +288,6 @@ echo 1190000 0 0 0 0 0 0 0 > /proc/sys/walt/input_boost/input_boost_freq
 echo 80 > /proc/sys/walt/input_boost/input_boost_ms
 
 # configure governor settings for gold cluster
-if [ -d "/sys/devices/system/cpu/cpufreq/policy4/" ]; then
 echo "walt" > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
 echo 0 > /sys/devices/system/cpu/cpufreq/policy4/walt/down_rate_limit_us
 echo 0 > /sys/devices/system/cpu/cpufreq/policy4/walt/up_rate_limit_us
@@ -313,25 +295,6 @@ echo 1344000 > /sys/devices/system/cpu/cpufreq/policy4/walt/hispeed_freq
 echo 1056000 > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 echo 1 > /sys/devices/system/cpu/cpufreq/policy4/walt/pl
 echo 0 > /sys/devices/system/cpu/cpufreq/policy4/walt/rtg_boost_freq
-
-elif [ -d "/sys/devices/system/cpu/cpufreq/policy5/" ]; then
-echo "walt" > /sys/devices/system/cpu/cpufreq/policy5/scaling_governor
-echo 0 > /sys/devices/system/cpu/cpufreq/policy5/walt/down_rate_limit_us
-echo 0 > /sys/devices/system/cpu/cpufreq/policy5/walt/up_rate_limit_us
-echo 1344000 > /sys/devices/system/cpu/cpufreq/policy5/walt/hispeed_freq
-echo 1056000 > /sys/devices/system/cpu/cpufreq/policy5/scaling_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/policy5/walt/pl
-echo 0 > /sys/devices/system/cpu/cpufreq/policy5/walt/rtg_boost_freq
-
-elif [ -d "/sys/devices/system/cpu/cpufreq/policy6/" ]; then
-echo "walt" > /sys/devices/system/cpu/cpufreq/policy6/scaling_governor
-echo 0 > /sys/devices/system/cpu/cpufreq/policy6/walt/down_rate_limit_us
-echo 0 > /sys/devices/system/cpu/cpufreq/policy6/walt/up_rate_limit_us
-echo 1344000 > /sys/devices/system/cpu/cpufreq/policy6/walt/hispeed_freq
-echo 1056000 > /sys/devices/system/cpu/cpufreq/policy6/scaling_min_freq
-echo 1 > /sys/devices/system/cpu/cpufreq/policy6/walt/pl
-echo 0 > /sys/devices/system/cpu/cpufreq/policy6/walt/rtg_boost_freq
-fi
 
 # configure bus-dcvs
 bus_dcvs="/sys/devices/system/cpu/bus_dcvs"
