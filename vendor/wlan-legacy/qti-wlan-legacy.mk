@@ -33,7 +33,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.ipsec_tunnels.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.ipsec_tunnels.xml
 
 PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service \
+    android.hardware.wifi-service \
     fstman \
     fstman.ini \
     hostapd \
@@ -46,6 +46,10 @@ PRODUCT_PACKAGES += \
     sigma_dut \
     wpa_supplicant \
     wpa_supplicant.conf
+
+PRODUCT_PACKAGES += \
+    android.hardware.wifi.supplicant-V1-ndk.vendor \
+    vendor.qti.hardware.wifi.supplicant-V1-ndk.vendor
 
 ifeq ($(call is-board-platform-in-list, lahaina),true)
 PRODUCT_PACKAGES += \

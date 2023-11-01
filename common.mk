@@ -27,11 +27,9 @@ QCOM_BOARD_PLATFORMS += \
     $(TRINKET) \
     atoll \
     bengal \
-    bengal_515 \
     crow \
     holi \
     kona \
-    kona_515 \
     kalama \
     lahaina \
     lito \
@@ -63,6 +61,7 @@ MSM_VIDC_TARGET_LIST := \
     sdm710 \
     sdm845
 
+ifneq (,$(filter 3.18 4.4 4.9 4.14 4.19, $(TARGET_KERNEL_VERSION)))
 # List of targets that use master side content protection.
 MASTER_SIDE_CP_TARGET_LIST := \
     $(MSMSTEPPE) \
@@ -77,6 +76,7 @@ MASTER_SIDE_CP_TARGET_LIST := \
     sdm660 \
     sdm710 \
     sdm845
+endif
 
 # Include QCOM board utilities.
 ifeq ($(TARGET_FWK_SUPPORTS_FULL_VALUEADDS),true)
@@ -85,9 +85,7 @@ endif
 
 # Kernel Families
 5_15_FAMILY := \
-    bengal_515 \
     crow \
-    kona_515 \
     kalama \
     monaco
 
@@ -152,11 +150,18 @@ DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
     vendor/qcom/opensource/core-utils/vendor_framework_compatibility_matrix.xml
 endif
 
+# Opt out of 16K alignment changes
+PRODUCT_MAX_PAGE_SIZE_SUPPORTED ?= 4096
+
 # Components
 include $(QCOM_COMMON_PATH)/components.mk
 
 # Filesystem
 TARGET_FS_CONFIG_GEN += $(QCOM_COMMON_PATH)/config.fs
+
+# Partition source order for Product/Build properties pickup.
+PRODUCT_SYSTEM_PROPERTIES += \
+    ro.product.property_source_order=odm,vendor,product,system_ext,system
 
 # Power
 ifneq ($(TARGET_PROVIDES_POWERHAL),true)

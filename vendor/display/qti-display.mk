@@ -41,6 +41,13 @@ PRODUCT_PACKAGES += \
     libqdutils \
     libqservice
 
+# Properties for <5.15 targets
+# These are already set on 5.15+.
+ifneq (,$(filter 3.18 4.4 4.9 4.14 4.19 5.4 5.10, $(TARGET_KERNEL_VERSION)))
+PRODUCT_VENDOR_PROPERTIES += \
+    debug.sf.auto_latch_unsignaled=0
+endif
+
 # Properties for <5.10 targets
 # These are already set on 5.10+.
 ifneq (,$(filter 3.18 4.4 4.9 4.14 4.19 5.4, $(TARGET_KERNEL_VERSION)))
@@ -56,10 +63,27 @@ PRODUCT_VENDOR_PROPERTIES += \
     debug.sf.disable_client_composition_cache=1
 endif
 
+# Properties for <4.19 targets
+# These are already set on 4.19+.
+ifneq (,$(filter 3.18 4.4 4.9 4.14, $(TARGET_KERNEL_VERSION)))
+PRODUCT_VENDOR_PROPERTIES += \
+    debug.sf.latch_unsignaled=1
+endif
+
 # Copy feature_enabler rc only for lahaina on 5.4
 ifeq ($(call is-board-platform-in-list, lahaina),true)
 PRODUCT_COPY_FILES += \
     device/qcom/common/vendor/display/5.4/feature_enabler_client.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/feature_enabler_client.rc
+endif
+
+# Disable custom content metadata region on <5.15 targets
+ifneq (,$(filter 3.18 4.4 4.9 4.14 4.19 5.4 5.10, $(TARGET_KERNEL_VERSION)))
+TARGET_GRALLOC_HANDLE_HAS_NO_CUSTOM_CONTENT_MD_RESERVED_SIZE := true
+endif
+
+# Disable UBWC-P on <6.1 targets
+ifneq (,$(filter 3.18 4.4 4.9 4.14 4.19 5.4 5.10 5.15, $(TARGET_KERNEL_VERSION)))
+TARGET_GRALLOC_HANDLE_HAS_NO_UBWCP := true
 endif
 
 # Get non-open-source specific aspects.

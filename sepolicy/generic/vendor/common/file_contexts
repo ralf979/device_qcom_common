@@ -12,8 +12,14 @@
 /sys/devices(/platform)?/soc/[a-f0-9]+.ufshc/host0/target0:0:0/0:0:0:[0-9]+/block/sda/queue/read_ahead_kb u:object_r:vendor_sysfs_scsi_target:s0
 /sys/devices(/platform)?/soc/[a-f0-9]+.ufshc/host0/target0:0:0/0:0:0:[0-9]+/block/sda/queue/discard_max_bytes u:object_r:vendor_sysfs_scsi_target:s0
 
+# Perf
+/vendor/bin/perf_qesdk_client                  u:object_r:vendor_perf_qesdk_exec:s0
+
 # Persist files
 /mnt/vendor/persist/wlan(/.*)?                                      u:object_r:vendor_persist_wcnss_service_file:s0
+
+# Sensors
+/vendor/bin/sensors-qesdk                       u:object_r:vendor_sensors_qesdk_exec:s0
 
 # Missing Labels from taro
 /dev/wcd-dsp-glink                              u:object_r:audio_device:s0

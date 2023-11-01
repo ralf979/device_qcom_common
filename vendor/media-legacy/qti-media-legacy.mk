@@ -17,8 +17,23 @@ PRODUCT_SOONG_NAMESPACES += \
 
 TARGET_MEDIA_COMPONENT_VARIANT := media-legacy
 
+ifneq ($(call is-board-platform-in-list, sm6150 msmnile kona),true)
+TARGET_DISABLE_C2_CODEC ?= true
+endif
+
+ifeq ($(TARGET_DISABLE_C2_CODEC),true)
+PRODUCT_ODM_PROPERTIES += \
+    debug.stagefright.ccodec=0
+endif
+
 # Inherit configuration from the HAL.
 $(call inherit-product-if-exists, hardware/qcom/media/product.mk)
+
+# Manifest
+ifneq ($(TARGET_USES_CUSTOM_C2_MANIFEST), true)
+DEVICE_MANIFEST_FILE += \
+    $(QCOM_COMMON_PATH)/vendor/media-legacy/c2_manifest_vendor.xml
+endif
 
 # Media Codecs
 PRODUCT_COPY_FILES += \
